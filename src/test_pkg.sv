@@ -3,7 +3,6 @@ package test_pkg;
 
 	 import uvm_pkg::*;
 	`include "uvm_macros.svh"
-
 	`include "seq_item.sv"
 	`include "alu_cfg.sv"
 	`include "alu_driver.sv"

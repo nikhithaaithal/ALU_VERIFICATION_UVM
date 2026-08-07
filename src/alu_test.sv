@@ -23,13 +23,65 @@ class alu_test extends uvm_test;
  endfunction
 endclass
 
+class test_rst extends alu_test;
+  `uvm_component_utils(test_rst)
 
+  reset s0;
+
+  function new(string name="test_rst", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+
+    s0 = reset::type_id::create("s0");
+
+    fork
+      begin
+        s0.start(env1.inp_agt.seqr);
+      end
+
+      begin
+        #30;                      
+        env1.inp_agt.drv.apply_reset();
+      end
+    join
+
+    phase.drop_objection(this);
+
+  endtask
+
+endclass
 class test1 extends alu_test;
  `uvm_component_utils(test1)
-  seq0 s0;
-  seq1 s1;
-
+  ari s0;
   function new(string name="test1",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=ari::type_id::create("s0");
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class logical extends alu_test;
+ `uvm_component_utils(logical)
+
+  log s1;
+  function new(string name="logical",uvm_component parent=null);
 	super.new(name,parent);
  endfunction
 
@@ -40,14 +92,602 @@ class test1 extends alu_test;
 
  task run_phase(uvm_phase phase);
  phase.raise_objection(this);
-  s0=seq0::type_id::create("s0");
-  s1=seq1::type_id::create("s1");
-
-    s0.start(env1.inp_agt.seqr);
-    
-    s1.start(env1.inp_agt.seqr);
+  s1=log::type_id::create("s1");
+  s1.start(env1.inp_agt.seqr);
  phase.drop_objection(this);
+
+ endtask 
+endclass
+
+// Addition of zeros
+class add_zeros_test extends alu_test;
+  `uvm_component_utils(add_zeros_test)
+
+  seq3 s3;
+
+  function new(string name="add_zeros_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s3 = seq3::type_id::create("s3");
+    s3.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+// Addition of maximum values
+class add_max_test extends alu_test;
+  `uvm_component_utils(add_max_test)
+
+  seq4 s4;
+
+  function new(string name="add_max_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s4 = seq4::type_id::create("s4");
+    s4.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+// Subtraction resulting in negative value
+class sub_negative_test extends alu_test;
+  `uvm_component_utils(sub_negative_test)
+
+  seq5 s5;
+
+  function new(string name="sub_negative_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s5 = seq5::type_id::create("s5");
+    s5.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+// Subtraction of zeros
+class sub_zeros_test extends alu_test;
+  `uvm_component_utils(sub_zeros_test)
+
+  seq6 s6;
+
+  function new(string name="sub_zeros_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s6 = seq6::type_id::create("s6");
+    s6.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+// Subtraction of maximum values
+class sub_max_test extends alu_test;
+  `uvm_component_utils(sub_max_test)
+
+  seq7 s7;
+
+  function new(string name="sub_max_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s7 = seq7::type_id::create("s7");
+    s7.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+// Add with carry, zero operands
+class add_cin_zero_test extends alu_test;
+  `uvm_component_utils(add_cin_zero_test)
+
+  seq8 s8;
+
+  function new(string name="add_cin_zero_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s8 = seq8::type_id::create("s8");
+    s8.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+// Add with carry, maximum operands
+class add_cin_max_test extends alu_test;
+  `uvm_component_utils(add_cin_max_test)
+
+  seq9 s9;
+
+  function new(string name="add_cin_max_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s9 = seq9::type_id::create("s9");
+    s9.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+
+// Subtract with carry, zero operands
+class sub_cin_zero_test extends alu_test;
+  `uvm_component_utils(sub_cin_zero_test)
+
+  seq10 s10;
+
+  function new(string name="sub_cin_zero_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s10 = seq10::type_id::create("s10");
+    s10.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+
+
+// Subtract with carry, maximum operands
+class sub_cin_max_test extends alu_test;
+  `uvm_component_utils(sub_cin_max_test)
+
+  seq11 s11;
+
+  function new(string name="sub_cin_max_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s11 = seq11::type_id::create("s11");
+    s11.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+
+// Increment OPA at maximum value
+class inc_opa_max_test extends alu_test;
+  `uvm_component_utils(inc_opa_max_test)
+
+  seq12 s12;
+
+  function new(string name="inc_opa_max_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s12 = seq12::type_id::create("s12");
+    s12.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+
+// Decrement OPA at zero
+class dec_opa_zero_test extends alu_test;
+  `uvm_component_utils(dec_opa_zero_test)
+
+  seq14 s14;
+
+  function new(string name="dec_opa_zero_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s14 = seq14::type_id::create("s14");
+    s14.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+// Increment OPB at maximum value
+class inc_opb_max_test extends alu_test;
+  `uvm_component_utils(inc_opb_max_test)
+
+  seq16 s16;
+
+  function new(string name="inc_opb_max_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s16 = seq16::type_id::create("s16");
+    s16.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+// Decrement OPB at zero
+class dec_opb_zero_test extends alu_test;
+  `uvm_component_utils(dec_opb_zero_test)
+
+  seq18 s18;
+
+  function new(string name="dec_opb_zero_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    s18 = seq18::type_id::create("s18");
+    s18.start(env1.inp_agt.seqr);
+    phase.drop_objection(this);
+  endtask
+endclass
+
+class mul_inc extends alu_test;
+ `uvm_component_utils(mul_inc)
+  ari9 s0;
+
+  function new(string name="mul_inc",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=ari9::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+ #50;
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class mul_inc_max extends alu_test;
+ `uvm_component_utils(mul_inc_max)
+
+  ari9_max s1;
+  function new(string name="mul_inc_max",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+
+   s1=ari9_max::type_id::create("s1"); 
+   s1.start(env1.inp_agt.seqr);
+ #50;
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+class mul_shl extends alu_test;
+ `uvm_component_utils(mul_shl)
+  ari10 s0; 
+  function new(string name="mul_shl",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=ari10::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+  #50;
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class mul_shl_max extends alu_test;
+ `uvm_component_utils(mul_shl_max)
+
+  ari10_max s1; 
+  function new(string name="mul_shl_max",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s1=ari10_max::type_id::create("s1");
+  s1.start(env1.inp_agt.seqr);
+  #50;
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class input_valid_m1 extends alu_test;
+ `uvm_component_utils(input_valid_m1)
+  seq13 s13;
+  seq15 s15;
+  seq17 s17;
+  seq19 s19;
+
+  function new(string name="input_valid_m1",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s13 = seq13::type_id::create("s13");
+  s15 = seq15::type_id::create("s15");
+  s17 = seq17::type_id::create("s17");
+  s19 = seq19::type_id::create("s19");
+
+s13.start(env1.inp_agt.seqr);
+s15.start(env1.inp_agt.seqr);
+s17.start(env1.inp_agt.seqr);
+s19.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
  endtask 
 endclass
 
 
+
+
+class input_valid_m0  extends alu_test;
+ `uvm_component_utils(input_valid_m0)
+  seq_valid_inputs_m0 s0;
+  
+  function new(string name="input_valid_m0",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=seq_valid_inputs_m0::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class compare_inputs extends alu_test;
+ `uvm_component_utils(compare_inputs)
+  compare_seq s0;
+  
+  function new(string name="compare_inputs",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=compare_seq::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class cmd_inv extends alu_test;
+ `uvm_component_utils(cmd_inv)
+  cmd_m1_iv  s0;
+  cmd_m0_iv  s1;
+  function new(string name="cmd_inv",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=cmd_m1_iv ::type_id::create("s0");
+  s1=cmd_m0_iv ::type_id::create("s1");
+    s0.start(env1.inp_agt.seqr);
+    s1.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class input_valid_00 extends alu_test;
+ `uvm_component_utils(input_valid_00)
+  seq_iv_0 s0;
+  
+  function new(string name="input_valid_00",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0= seq_iv_0 ::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class ce_zero extends alu_test;
+ `uvm_component_utils(ce_zero)
+  seq_ce_zero s0;
+  
+  function new(string name="ce_zero",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=seq_ce_zero::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class test_wait_16 extends alu_test;
+ `uvm_component_utils(test_wait_16)
+  wait_16 s0;
+  
+  function new(string name="test_wait_16",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=wait_16::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class test_wait_override extends alu_test;
+ `uvm_component_utils(test_wait_override)
+  wait_override s0;
+  
+  function new(string name="test_wait_override",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=wait_override::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class test_wait_cmd_change extends alu_test;
+ `uvm_component_utils(test_wait_cmd_change)
+  seq_cmd_change s0;
+  
+  function new(string name="test_wait_cmd_change",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=seq_cmd_change::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class test_wait_16_err extends alu_test;
+ `uvm_component_utils(test_wait_16_err)
+  wait_err s0;
+  
+  function new(string name="test_wait_16_err",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=wait_err::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class test_wait_16_mul extends alu_test;
+ `uvm_component_utils(test_wait_16_mul)
+  wait_16_mul s0;
+  
+  function new(string name="test_wait_16_mul",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0= wait_16_mul::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass

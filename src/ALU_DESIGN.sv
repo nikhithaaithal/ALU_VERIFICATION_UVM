@@ -150,7 +150,7 @@ module ALU_DESIGN #(parameter DW = 8, CW = 4)(INP_VALID,OPA,OPB,CIN,CLK,RST,CMD,
            4'b1010: begin   
                     AU_out_tmp1 <= oprd1 << 1;
                     AU_out_tmp2 <= oprd2;
-                    RES <=AU_out_tmp1 - AU_out_tmp2; 
+                    RES <=AU_out_tmp1 - AU_out_tmp2; //
                   end
  
            default:   

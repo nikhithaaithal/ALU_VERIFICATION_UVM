@@ -32,10 +32,10 @@ class alu_scoreboard extends uvm_scoreboard;
       out_mon_fifo.get(out);
       ref_model(inp);
       `uvm_info("REFERENCE_MODEL",$sformatf("REFERENCE_MODEL\n%s",inp.sprint()),UVM_NONE)
+       $display("Wait_count= %d",wait_state);
        check_data(out);
        //validate_output();
 
-       //`uvm_info("CHECKING OUTPUT ",$sformatf("CHECKING OUTPUT\n%s",out.sprint()),UVM_NONE)
     end
  endtask
 
@@ -57,15 +57,15 @@ task check_data(trans ch);
   else 
       $display("\n OFLOW IS NOT MATCHING");
 
-  if(inp.g == ch.g)
+  if(inp.g === ch.g)
       $display("\n GREATER IS  MATCHING");
   else 
       $display("\n GREATER IS NOT MATCHING");
-  if(inp.l == ch.l)
+  if(inp.l === ch.l)
       $display("\n LESSER  IS  MATCHING");
   else 
       $display("\n LESSER IS NOT MATCHING");
-  if(inp.e == ch.e)
+  if(inp.e === ch.e)
       $display("\n EQUAL IS  MATCHING");
   else 
       $display("\n EQUAL IS NOT MATCHING");
@@ -109,9 +109,16 @@ endtask
 
 
 virtual task ref_model(trans t);
-
        if(t.rst) begin
         clear_operands();
+             t.res    = 0;
+             t.cout   = 0;
+   	     t.oflow  = 0;
+    	     t.g      = 0;
+ 	     t.e      = 0;
+  	     t.l      = 0;
+  	     t.err    = 0;
+        return;
       end
       else if(t.ce)begin
         if (t.inp_valid==2'b01)  begin
@@ -156,10 +163,11 @@ virtual task ref_model(trans t);
         oprd1=0;
         oprd2=0;
         CMD_tmp=0;
-        if(wait_state==0) t.err=1;
-        else  wait_state ++;
+        //if(wait_state==0) t.err=1;
+        //else  wait_state ++;
       end 
 /////////////// wait state reset/////////
+/*
     if( iv_1 && iv_2)
       wait_state=0;
     else if ( wait_state > 0 && wait_state<16 &&(CMD_tmp != t.cmd || MODE_tmp != t.mode))
@@ -174,22 +182,22 @@ virtual task ref_model(trans t);
          clear_operands();
        end
       end
-
+*/
 
 
      if(t.ce)                   
         begin
          if(t.rst)                
           begin
-            t.res=0;
-            t.cout=1'b0;
-            t.oflow=1'b0;
-            t.g=1'b0;
-            t.e=1'b0;
-            t.l=1'b0;
-            t.err=1'b0;
-	    AU_out_tmp1=0;
-            AU_out_tmp2=0;
+            clear_operands();
+             t.res    = 0;
+             t.cout   = 0;
+   	     t.oflow  = 0;
+    	     t.g      = 0;
+ 	     t.e      = 0;
+  	     t.l      = 0;
+  	     t.err    = 0;
+        return;
 	  end
  
          else if(t.mode)          
@@ -361,6 +369,30 @@ virtual task ref_model(trans t);
          //clear_operands();
      end
     end
+   if(t.inp_valid==2'b00)  begin    
+        if(wait_state==0) t.err=1;
+        else  wait_state ++;
+      end 
+   if((t.mode && t.cmd >10) || (!t.mode && t.cmd >13) )
+    t.err=1;
+
+    if( iv_1 && iv_2)
+      wait_state=0;
+    else if ( wait_state > 0 && wait_state<16 &&(CMD_tmp != t.cmd || MODE_tmp != t.mode))
+     begin 
+      wait_state =0;
+      //clear_operands();
+      end
+    else if(wait_state > 16)
+       begin
+         wait_state=0;
+  	 t.err=1;
+         clear_operands();
+       end
+      end
 endtask 
+
+
+ 
 
 endclass

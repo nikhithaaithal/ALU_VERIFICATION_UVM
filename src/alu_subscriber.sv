@@ -36,10 +36,12 @@ class alu_subscriber extends uvm_subscriber #(trans);
  
    cmd_cin_cp: cross cmd_cp,cin_cp;
   endgroup 
+
   function new(string name, uvm_component parent);
    super.new(name,parent);
    alu_cg=new();
   endfunction
+
   function void write(trans t);
      tr=t;
     //`uvm_info("SUBSCRIBER", $sformatf("Received transaction:\n%s", tr.sprint()), UVM_HIGH)

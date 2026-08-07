@@ -28,21 +28,24 @@ task run_phase(uvm_phase phase);
     @(vif.inp_mon_cb);
  forever begin
   collect_input_monitor();
-  //`uvm_info("INPUT_MONITOR",$sformatf("Input MONITOR\n%s",duv2mon.sprint()),UVM_HIGH);
   `uvm_info("INPUT_MONITOR",
-  $sformatf("opa=%0d opb=%0d ce=%0b mode=%0b cin=%0b inp_valid=%0b cmd=%0d res=%0d cout=%0b oflow=%0b g=%0b e=%0b l=%0b err=%0b",
-             duv2mon.opa, duv2mon.opb, duv2mon.ce, duv2mon.mode, duv2mon.cin,
+  $sformatf("rst=%0d opa=%0d opb=%0d ce=%0b mode=%0b cin=%0b inp_valid=%0b cmd=%0d res=%0d cout=%0b oflow=%0b g=%0b e=%0b l=%0b err=%0b",
+             duv2mon.rst, duv2mon.opa, duv2mon.opb, duv2mon.ce, duv2mon.mode, duv2mon.cin,
              duv2mon.inp_valid, duv2mon.cmd, duv2mon.res, duv2mon.cout,
              duv2mon.oflow, duv2mon.g, duv2mon.e, duv2mon.l, duv2mon.err),
   UVM_HIGH)
    end
 endtask
 
-
+/*
 task collect_input_monitor();
  begin
-    repeat(4) 
-     @(vif.inp_mon_cb);
+    if (flag ==1 )
+    begin
+        repeat(5) 
+        @(vif.inp_mon_cb);
+    $display("Displaying one extra delay...................................................................................................");
+   
     duv2mon.opa =vif.inp_mon_cb.opa;
     duv2mon.opb =vif.inp_mon_cb.opb;
     duv2mon.ce =vif.inp_mon_cb.ce;
@@ -53,10 +56,64 @@ task collect_input_monitor();
 	    begin
 		duv2mon.cin       =   vif.inp_mon_cb.cin;
 	     end
-
     inp_monitor_port.write(duv2mon);
-
+    end
+    else
+    begin
+      repeat(4) @(vif.inp_mon_cb);
+    duv2mon.opa =vif.inp_mon_cb.opa;
+    duv2mon.opb =vif.inp_mon_cb.opb;
+    duv2mon.ce =vif.inp_mon_cb.ce;
+    duv2mon.mode=vif.inp_mon_cb.mode;
+    duv2mon.cmd =vif.inp_mon_cb.cmd;
+    duv2mon.inp_valid =vif.inp_mon_cb.inp_valid;
+    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b0010) || (duv2mon.cmd==4'b0011)))
+	    begin
+		duv2mon.cin       =   vif.inp_mon_cb.cin;
+	     end
+    inp_monitor_port.write(duv2mon);
+    end
  end
+endtask
+*/
+
+task collect_input_monitor();
+ begin
+        repeat(4) 
+        @(vif.inp_mon_cb);
+     begin
+    duv2mon.rst =vif.inp_mon_cb.rst;
+    duv2mon.opa =vif.inp_mon_cb.opa;
+    duv2mon.opb =vif.inp_mon_cb.opb;
+    duv2mon.ce =vif.inp_mon_cb.ce;
+    duv2mon.mode=vif.inp_mon_cb.mode;
+    duv2mon.cmd =vif.inp_mon_cb.cmd;
+    duv2mon.inp_valid =vif.inp_mon_cb.inp_valid;
+    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b0010) || (duv2mon.cmd==4'b0011)))
+	    begin
+		duv2mon.cin       =   vif.inp_mon_cb.cin;
+	     end
+    inp_monitor_port.write(duv2mon);
+    end
+    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b1001) || (duv2mon.cmd==4'b1010)))
+     begin
+     @(vif.inp_mon_cb);
+    begin
+    duv2mon.rst =vif.inp_mon_cb.rst;
+    duv2mon.opa =vif.inp_mon_cb.opa;
+    duv2mon.opb =vif.inp_mon_cb.opb;
+    duv2mon.ce =vif.inp_mon_cb.ce;
+    duv2mon.mode=vif.inp_mon_cb.mode;
+    duv2mon.cmd =vif.inp_mon_cb.cmd;
+    duv2mon.inp_valid =vif.inp_mon_cb.inp_valid;
+    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b0010) || (duv2mon.cmd==4'b0011)))
+	    begin
+		duv2mon.cin       =   vif.inp_mon_cb.cin;
+	     end
+    inp_monitor_port.write(duv2mon);
+    end
+    end
+end
 endtask
 endclass
 
