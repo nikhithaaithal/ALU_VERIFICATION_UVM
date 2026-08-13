@@ -434,13 +434,13 @@ class ari9 extends uvm_sequence #(trans);
  task body();
   req= trans::type_id::create("req");
   begin
-  //repeat(1)
+  repeat(3)
     begin
-    wait_for_grant();
-      assert(req.randomize() with {mode ==1'b1; cmd inside {9};inp_valid == 2'b11;opa==22; opb==8;});
+      wait_for_grant();
+      assert(req.randomize() with {mode ==1'b1; cmd inside {9};inp_valid == 2'b11;});
       send_request(req);
       wait_for_item_done();
-  end
+    end
   end
  endtask
 endclass
@@ -456,14 +456,11 @@ class ari10 extends uvm_sequence #(trans);
  task body();
   req= trans::type_id::create("req");
   begin
-  repeat(1)begin
+  repeat(5)begin
     wait_for_grant();
-    //start_item(req);
       assert(req.randomize() with {mode ==1'b1; cmd inside {10};inp_valid == 2'b11;opa==22; opb==8;});
       send_request(req);
       wait_for_item_done();
-      //get_response(res);
-    //finish_item(req);
   end
   end
  endtask
@@ -619,17 +616,16 @@ class wait_16_mul extends uvm_sequence #(trans);
 endclass
 
 
-//cmd change
-class wait_cmd_change extends uvm_sequence #(trans);
- `uvm_object_utils(wait_16_mul)
- function new(string name ="wait_16_mul");
+class wait_16_mul_ov extends uvm_sequence #(trans);
+ `uvm_object_utils(wait_16_mul_ov)
+ function new(string name ="wait_16_mul_ov");
    super.new(name);
  endfunction
  
  task body();
   req= trans::type_id::create("req");
    begin
-   repeat(12) 
+   repeat(10) 
    begin
     start_item(req);
       assert(req.randomize() with {mode == 1;opa == 9; opb ==9;cmd inside {9};inp_valid == 2'b01;ce==1; });
@@ -637,11 +633,59 @@ class wait_cmd_change extends uvm_sequence #(trans);
    end
 
    start_item(req);
-      assert(req.randomize() with {mode == 1;opa == 9; opb ==9;cmd inside {5};inp_valid == 2'b10;ce ==1; });
+      assert(req.randomize() with {mode == 1;opa == 9; opb ==10;cmd inside {9};inp_valid == 2'b10;ce ==1; });
     finish_item(req);
   end
  endtask
 endclass
+
+class wait_16_mul_err extends uvm_sequence #(trans);
+ `uvm_object_utils(wait_16_mul_err)
+ function new(string name ="wait_16_mul_err");
+   super.new(name);
+ endfunction
+ 
+ task body();
+  req= trans::type_id::create("req");
+   begin
+   repeat(17) 
+   begin
+    start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 9; opb ==9;cmd inside {9};inp_valid == 2'b01;ce==1; });
+    finish_item(req);
+   end
+
+  end
+ endtask
+endclass
+
+class wait_16_iv_00 extends uvm_sequence #(trans);
+ `uvm_object_utils(wait_16_iv_00)
+ function new(string name ="wait_16_iv_00");
+   super.new(name);
+ endfunction
+ 
+ task body();
+  req= trans::type_id::create("req");
+   begin
+   repeat(5) 
+   begin
+    start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 9; opb ==9;cmd inside {9};inp_valid == 2'b01;ce==1; });
+    finish_item(req);
+   end
+   repeat(5)begin
+   start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 9; opb ==10;cmd inside {9};inp_valid == 2'b00;ce ==1; });
+    finish_item(req);
+   end
+   start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 9; opb ==10;cmd inside {9};inp_valid == 2'b10;ce ==1; });
+    finish_item(req);
+  end
+ endtask
+endclass
+
 
 //input valid is 00
 class seq_iv_0 extends uvm_sequence #(trans);

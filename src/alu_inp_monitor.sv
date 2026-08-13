@@ -37,68 +37,20 @@ task run_phase(uvm_phase phase);
    end
 endtask
 
-/*
-task collect_input_monitor();
- begin
-    if (flag ==1 )
-    begin
-        repeat(5) 
-        @(vif.inp_mon_cb);
-    $display("Displaying one extra delay...................................................................................................");
-   
-    duv2mon.opa =vif.inp_mon_cb.opa;
-    duv2mon.opb =vif.inp_mon_cb.opb;
-    duv2mon.ce =vif.inp_mon_cb.ce;
-    duv2mon.mode=vif.inp_mon_cb.mode;
-    duv2mon.cmd =vif.inp_mon_cb.cmd;
-    duv2mon.inp_valid =vif.inp_mon_cb.inp_valid;
-    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b0010) || (duv2mon.cmd==4'b0011)))
-	    begin
-		duv2mon.cin       =   vif.inp_mon_cb.cin;
-	     end
-    inp_monitor_port.write(duv2mon);
-    end
-    else
-    begin
-      repeat(4) @(vif.inp_mon_cb);
-    duv2mon.opa =vif.inp_mon_cb.opa;
-    duv2mon.opb =vif.inp_mon_cb.opb;
-    duv2mon.ce =vif.inp_mon_cb.ce;
-    duv2mon.mode=vif.inp_mon_cb.mode;
-    duv2mon.cmd =vif.inp_mon_cb.cmd;
-    duv2mon.inp_valid =vif.inp_mon_cb.inp_valid;
-    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b0010) || (duv2mon.cmd==4'b0011)))
-	    begin
-		duv2mon.cin       =   vif.inp_mon_cb.cin;
-	     end
-    inp_monitor_port.write(duv2mon);
-    end
- end
-endtask
-*/
 
 task collect_input_monitor();
  begin
-        repeat(4) 
-        @(vif.inp_mon_cb);
-     begin
-    duv2mon.rst =vif.inp_mon_cb.rst;
-    duv2mon.opa =vif.inp_mon_cb.opa;
-    duv2mon.opb =vif.inp_mon_cb.opb;
-    duv2mon.ce =vif.inp_mon_cb.ce;
-    duv2mon.mode=vif.inp_mon_cb.mode;
-    duv2mon.cmd =vif.inp_mon_cb.cmd;
-    duv2mon.inp_valid =vif.inp_mon_cb.inp_valid;
-    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b0010) || (duv2mon.cmd==4'b0011)))
-	    begin
-		duv2mon.cin       =   vif.inp_mon_cb.cin;
-	     end
-    inp_monitor_port.write(duv2mon);
-    end
-    if((duv2mon.mode==1) && ((duv2mon.cmd==4'b1001) || (duv2mon.cmd==4'b1010)))
-     begin
-     @(vif.inp_mon_cb);
+  repeat(2)@(vif.inp_mon_cb);
+    if (vif.inp_mon_cb.mode &&
+      (vif.inp_mon_cb.cmd inside {4'b1001,4'b1010}))
     begin
+      $display("MULTIPLICATION");
+      repeat(2) @(vif.inp_mon_cb);
+    end
+  else
+    repeat(1) @(vif.inp_mon_cb);
+
+    @(vif.inp_mon_cb);    
     duv2mon.rst =vif.inp_mon_cb.rst;
     duv2mon.opa =vif.inp_mon_cb.opa;
     duv2mon.opb =vif.inp_mon_cb.opb;
@@ -111,9 +63,11 @@ task collect_input_monitor();
 		duv2mon.cin       =   vif.inp_mon_cb.cin;
 	     end
     inp_monitor_port.write(duv2mon);
-    end
-    end
+
+
 end
 endtask
+ 
+
 endclass
 

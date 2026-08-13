@@ -76,24 +76,7 @@ task check_data(trans ch);
 
  end
 endtask
-/*
-virtual task validate_output();
-	if(inp.compare(out))
-	begin
-	  `uvm_info(get_type_name,$sformatf("DATA MATCH SUCCESSFUL"),UVM_NONE)
-	
-	end
-	else
-	
-	begin
-	  `uvm_info(get_type_name,$sformatf("DATA DISMATCH SUCCESSFUL"),UVM_NONE)
-	   
-	  `uvm_info(get_type_name,$sformatf("Expected Packet\n%s",inp.sprint()),UVM_NONE)
-	  `uvm_info(get_type_name,$sformatf("DUT Packet\n%s",out.sprint()),UVM_NONE)
-	end
-	
-	 endtask
-*/
+
 task clear_operands();
 begin
     iv_1       = 0;
@@ -159,13 +142,13 @@ virtual task ref_model(trans t);
         iv_1=1;
         iv_2=1;
       end
+
       else if(t.inp_valid==2'b00)  begin    
-        oprd1=0;
-        oprd2=0;
-        CMD_tmp=0;
-        //if(wait_state==0) t.err=1;
-        //else  wait_state ++;
+        if(wait_state==0) clear_operands();
+        else  wait_state ++;
       end 
+
+
 /////////////// wait state reset/////////
 /*
     if( iv_1 && iv_2)
@@ -369,10 +352,8 @@ virtual task ref_model(trans t);
          //clear_operands();
      end
     end
-   if(t.inp_valid==2'b00)  begin    
-        if(wait_state==0) t.err=1;
-        else  wait_state ++;
-      end 
+
+
    if((t.mode && t.cmd >10) || (!t.mode && t.cmd >13) )
     t.err=1;
 
@@ -381,7 +362,7 @@ virtual task ref_model(trans t);
     else if ( wait_state > 0 && wait_state<16 &&(CMD_tmp != t.cmd || MODE_tmp != t.mode))
      begin 
       wait_state =0;
-      //clear_operands();
+      
       end
     else if(wait_state > 16)
        begin

@@ -36,62 +36,20 @@ task run_phase(uvm_phase phase);
              data_out.oflow, data_out.g, data_out.e, data_out.l, data_out.err), UVM_HIGH)
    end
 endtask
-/*
-virtual task collect_output_monitor();
-begin
-if( flag ==1)
-repeat(5)
-@(viff.out_mon_cb);
-  
-  begin
-  data_out.res = viff.out_mon_cb.res;
-  data_out.cout = viff.out_mon_cb.cout; 
-  data_out.oflow = viff.out_mon_cb.oflow;
-  data_out.g= viff.out_mon_cb.g;
-  data_out.e = viff.out_mon_cb.e;
-  data_out.l = viff.out_mon_cb.l;
-  data_out.err = viff.out_mon_cb.err;
-  data_out.ce = viff.out_mon_cb.ce;
-  data_out.inp_valid = viff.out_mon_cb.inp_valid;
-  data_out.opa = viff.out_mon_cb.opa;
-  data_out.opb = viff.out_mon_cb.opb;
-  data_out.mode = viff.out_mon_cb.mode;
-  data_out.cmd = viff.out_mon_cb.cmd;
-  data_out.cin = viff.out_mon_cb.cin;
-  end
-  out_monitor_port.write(data_out);
-  if((data_out.mode==1) && ((data_out.cmd==4'b1001) || (data_out.cmd==4'b1010)))
-	  begin
-	    	@(viff.out_mon_cb);
-		data_out.res = viff.out_mon_cb.res;
-  data_out.cout = viff.out_mon_cb.cout; 
-  data_out.oflow = viff.out_mon_cb.oflow;
-  data_out.g= viff.out_mon_cb.g;
-  data_out.e = viff.out_mon_cb.e;
-  data_out.l = viff.out_mon_cb.l;
-  data_out.err = viff.out_mon_cb.err;
-  data_out.ce = viff.out_mon_cb.ce;
-  data_out.inp_valid = viff.out_mon_cb.inp_valid;
-  data_out.opa = viff.out_mon_cb.opa;
-  data_out.opb = viff.out_mon_cb.opb;
-  data_out.mode = viff.out_mon_cb.mode;
-  data_out.cmd = viff.out_mon_cb.cmd;
-  data_out.cin = viff.out_mon_cb.cin;
-  out_monitor_port.write(data_out);
-  end
-   
-  
-       
-    	
-end
-endtask
-
-*/
-
 
 virtual task collect_output_monitor();
 begin
-repeat(4)
+repeat(2)@(viff.out_mon_cb);
+if(viff.out_mon_cb.mode &&
+      (viff.out_mon_cb.cmd inside {4'b1001,4'b1010}))
+   begin
+    repeat(2)
+     @(viff.out_mon_cb);
+   end
+else 
+ begin 
+   repeat(1)@(viff.out_mon_cb);
+  end
 @(viff.out_mon_cb);
   data_out.rst = viff.out_mon_cb.rst;
   data_out.res = viff.out_mon_cb.res;
@@ -109,28 +67,10 @@ repeat(4)
   data_out.cmd = viff.out_mon_cb.cmd;
   data_out.cin = viff.out_mon_cb.cin;
   out_monitor_port.write(data_out);
-  if((data_out.mode==1) && ((data_out.cmd==4'b1001) || (data_out.cmd==4'b1010)))
-	  begin
-	   @(viff.out_mon_cb);
-	  data_out.res = viff.out_mon_cb.res;
-  data_out.cout = viff.out_mon_cb.cout; 
-  data_out.oflow = viff.out_mon_cb.oflow;
-  data_out.g= viff.out_mon_cb.g;
-  data_out.e = viff.out_mon_cb.e;
-  data_out.l = viff.out_mon_cb.l;
-  data_out.err = viff.out_mon_cb.err;
-  data_out.ce = viff.out_mon_cb.ce;
-  data_out.inp_valid = viff.out_mon_cb.inp_valid;
-  data_out.opa = viff.out_mon_cb.opa;
-  data_out.opb = viff.out_mon_cb.opb;
-  data_out.mode = viff.out_mon_cb.mode;
-  data_out.cmd = viff.out_mon_cb.cmd;
-  data_out.cin = viff.out_mon_cb.cin;
-  out_monitor_port.write(data_out);
-  end
-  
+    
 end
 endtask
+
 
 endclass
 

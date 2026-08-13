@@ -33,9 +33,6 @@ endtask
   viff.rst<=1'b0;
   forever begin
      seq_item_port.get_next_item(req);
-     /*if(req.mode ==1 && (req.cmd==9 ||req.cmd ==10);
-      req.flag ==1;
-     else flag ==0;*/
      drive(req);
      seq_item_port.item_done();
   end
@@ -60,9 +57,9 @@ endtask
   $sformatf("opa=%0d opb=%0d ce=%0b mode=%0b cin=%0b inp_valid=%0b cmd=%0d res=%0d cout=%0b oflow=%0b g=%0b e=%0b l=%0b err=%0b",
              data2duv.opa, data2duv.opb, data2duv.ce, data2duv.mode, data2duv.cin,
              data2duv.inp_valid, data2duv.cmd, data2duv.res, data2duv.cout,
-             data2duv.oflow, data2duv.g, data2duv.e, data2duv.l, data2duv.err),
-  UVM_LOW)
+             data2duv.oflow, data2duv.g, data2duv.e, data2duv.l, data2duv.err),UVM_LOW)
    repeat(2) @(viff.inp_drv_cb); 
+   if(data2duv.mode &&(data2duv.cmd == 4'b1001 || data2duv.cmd == 4'b1010))begin repeat(1) @(viff.inp_drv_cb);end
  end
  endtask
 endclass

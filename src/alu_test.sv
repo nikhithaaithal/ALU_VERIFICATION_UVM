@@ -361,7 +361,6 @@ class mul_inc extends alu_test;
  phase.raise_objection(this);
   s0=ari9::type_id::create("s0");
   s0.start(env1.inp_agt.seqr);
- #50;
  phase.drop_objection(this);
 
  endtask 
@@ -384,7 +383,6 @@ class mul_inc_max extends alu_test;
 
    s1=ari9_max::type_id::create("s1"); 
    s1.start(env1.inp_agt.seqr);
- #50;
  phase.drop_objection(this);
 
  endtask 
@@ -404,7 +402,7 @@ class mul_shl extends alu_test;
  phase.raise_objection(this);
   s0=ari10::type_id::create("s0");
   s0.start(env1.inp_agt.seqr);
-  #50;
+
  phase.drop_objection(this);
 
  endtask 
@@ -426,7 +424,6 @@ class mul_shl_max extends alu_test;
  phase.raise_objection(this);
   s1=ari10_max::type_id::create("s1");
   s1.start(env1.inp_agt.seqr);
-  #50;
  phase.drop_objection(this);
 
  endtask 
@@ -625,27 +622,6 @@ class test_wait_override extends alu_test;
  endtask 
 endclass
 
-class test_wait_cmd_change extends alu_test;
- `uvm_component_utils(test_wait_cmd_change)
-  seq_cmd_change s0;
-  
-  function new(string name="test_wait_cmd_change",uvm_component parent=null);
-	super.new(name,parent);
- endfunction
-
- function void build_phase(uvm_phase phase);
-	super.build_phase(phase);
- endfunction
-
- task run_phase(uvm_phase phase);
- phase.raise_objection(this);
-  s0=seq_cmd_change::type_id::create("s0");
-  s0.start(env1.inp_agt.seqr);
- phase.drop_objection(this);
-
- endtask 
-endclass
-
 
 class test_wait_16_err extends alu_test;
  `uvm_component_utils(test_wait_16_err)
@@ -685,6 +661,73 @@ class test_wait_16_mul extends alu_test;
  task run_phase(uvm_phase phase);
  phase.raise_objection(this);
   s0= wait_16_mul::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class test_wait_16_mul_ov extends alu_test;
+ `uvm_component_utils(test_wait_16_mul_ov)
+  wait_16_mul_ov s0;
+  
+  function new(string name="test_wait_16_mul_ov",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0= wait_16_mul_ov::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+class test_wait_16_mul_err extends alu_test;
+ `uvm_component_utils(test_wait_16_mul_err)
+  wait_16_mul_err s0;
+  
+  function new(string name="test_wait_16_mul_err",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0= wait_16_mul_err::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class test_wait_16_iv extends alu_test;
+ `uvm_component_utils(test_wait_16_iv)
+  wait_16_iv_00 s0;
+  
+  function new(string name="test_wait_16_iv",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0= wait_16_iv_00::type_id::create("s0");
   
     s0.start(env1.inp_agt.seqr);
  phase.drop_objection(this);
