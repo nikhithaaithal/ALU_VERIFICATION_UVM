@@ -164,6 +164,9 @@ class seq8 extends uvm_sequence #(trans);
     start_item(req);
       assert(req.randomize() with { mode ==1'b1; cmd == 2; opa==0; opb==0; cin==1; inp_valid==2'b11;  });
     finish_item(req);
+    start_item(req);
+      assert(req.randomize() with { mode ==1'b1; cmd == 2; opa==0; opb==0; cin==0; inp_valid==2'b11;  });
+    finish_item(req);
    end
  endtask
 endclass
@@ -503,7 +506,101 @@ class ari10_max extends uvm_sequence #(trans);
  endtask
 endclass
 
+class rotate extends uvm_sequence #(trans);
+  `uvm_object_utils(rotate)
 
+  function new(string name = "rotate");
+    super.new(name);
+  endfunction
+
+  task body();
+    req = trans::type_id::create("req");
+
+    begin
+      // CMD 12
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd12;
+        inp_valid == 2'b11;
+        opb == 8'b0001_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd12;
+        inp_valid == 2'b11;
+        opb == 8'b0010_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd12;
+        inp_valid == 2'b11;
+        opb == 8'b0100_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd12;
+        inp_valid == 2'b11;
+        opb == 8'b1000_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      // CMD 13
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd13;
+        inp_valid == 2'b11;
+        opb == 8'b0001_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd13;
+        inp_valid == 2'b11;
+        opb == 8'b0010_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd13;
+        inp_valid == 2'b11;
+        opb == 8'b0100_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+
+      wait_for_grant();
+      assert(req.randomize() with {
+        mode == 1'b0;
+        cmd == 4'd13;
+        inp_valid == 2'b11;
+        opb == 8'b1000_0000;
+      });
+      send_request(req);
+      wait_for_item_done();
+    end
+  endtask
+endclass
 ////wait states
 class wait_16 extends uvm_sequence #(trans);
  `uvm_object_utils(wait_16)
@@ -517,7 +614,7 @@ class wait_16 extends uvm_sequence #(trans);
    repeat(10) 
    begin
     start_item(req);
-      assert(req.randomize() with {mode == 1;opa == 29; opb ==19;cmd inside {0};inp_valid == 2'b01;ce==1; });
+      assert(req.randomize() with {mode == 1;opa == 29; opb ==19;cmd inside {0};inp_valid == 2'b01;ce==1;});
     finish_item(req);
    end
 
@@ -528,6 +625,28 @@ class wait_16 extends uvm_sequence #(trans);
  endtask
 endclass
 
+class wait2_16 extends uvm_sequence #(trans);
+ `uvm_object_utils(wait2_16)
+ function new(string name ="wait2_16");
+   super.new(name);
+ endfunction
+ 
+ task body();
+  req= trans::type_id::create("req");
+   begin
+   repeat(10) 
+   begin
+    start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 29; opb ==19;cmd inside {0};inp_valid == 2'b10;ce==1; });
+    finish_item(req);
+   end
+
+   start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 29; opb ==19;cmd inside {0};inp_valid == 2'b01;ce ==1; });
+    finish_item(req);
+  end
+ endtask
+endclass
 
 class wait_override extends uvm_sequence #(trans);
  `uvm_object_utils(wait_override)
@@ -550,6 +669,26 @@ class wait_override extends uvm_sequence #(trans);
  endtask
 endclass
 
+class wait2_override extends uvm_sequence #(trans);
+ `uvm_object_utils(wait2_override)
+ function new(string name ="wait2_override");
+   super.new(name);
+ endfunction
+ 
+ task body();
+  req= trans::type_id::create("req");
+   begin
+   repeat(10) begin
+    start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 29; opb ==19;cmd inside {0};inp_valid == 2'b10; ce ==1;});
+    finish_item(req);
+    end
+   start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 15; opb ==19;cmd inside {0};inp_valid == 2'b11; ce ==1;});
+    finish_item(req);
+  end
+ endtask
+endclass
 class seq_cmd_change extends uvm_sequence #(trans);
  `uvm_object_utils(seq_cmd_change)
  function new(string name ="seq_cmd_change");
@@ -590,7 +729,23 @@ class wait_err extends uvm_sequence #(trans);
  endtask
 endclass
 
-
+class wait2_err extends uvm_sequence #(trans);
+ `uvm_object_utils(wait2_err)
+ function new(string name ="wait2_err");
+   super.new(name);
+ endfunction
+ 
+ task body();
+  req= trans::type_id::create("req");
+   begin
+   repeat(18) begin
+    start_item(req);
+      assert(req.randomize() with {mode == 1;opa == 29; opb ==19;cmd inside {0};inp_valid == 2'b10;ce ==1; });
+    finish_item(req);
+  end
+  end
+ endtask
+endclass
 ////wait states mul
 class wait_16_mul extends uvm_sequence #(trans);
  `uvm_object_utils(wait_16_mul)
@@ -633,7 +788,7 @@ class wait_16_mul_ov extends uvm_sequence #(trans);
    end
 
    start_item(req);
-      assert(req.randomize() with {mode == 1;opa == 9; opb ==10;cmd inside {9};inp_valid == 2'b10;ce ==1; });
+      assert(req.randomize() with {mode == 1;opa == 12; opb ==10;cmd inside {9};inp_valid == 2'b10;ce ==1; });
     finish_item(req);
   end
  endtask
@@ -720,7 +875,7 @@ class seq_ce_zero extends uvm_sequence #(trans);
   req= trans::type_id::create("req");
    begin
     start_item(req);
-      assert(req.randomize() with {cmd==2;mode ==1;opa==23;opb==91;cin==1;ce ==1;});
+      assert(req.randomize() with {cmd==2;mode ==1;opa==23;opb==91;cin==1;ce ==0;});
     finish_item(req);
     start_item(req);
       assert(req.randomize() with {ce == 0;});

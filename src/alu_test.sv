@@ -577,6 +577,29 @@ class ce_zero extends alu_test;
  endtask 
 endclass
 
+class test_rotate extends alu_test;
+  `uvm_component_utils(test_rotate)
+
+  rotate s0;
+
+  function new(string name = "test_rotate",
+               uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+
+    s0 = rotate::type_id::create("s0");
+    s0.start(env1.inp_agt.seqr);
+
+    phase.drop_objection(this);
+  endtask
+endclass
 
 class test_wait_16 extends alu_test;
  `uvm_component_utils(test_wait_16)
@@ -593,6 +616,28 @@ class test_wait_16 extends alu_test;
  task run_phase(uvm_phase phase);
  phase.raise_objection(this);
   s0=wait_16::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+class test_wait2_16 extends alu_test;
+ `uvm_component_utils(test_wait2_16)
+  wait2_16 s0;
+  
+  function new(string name="test_wait2_16",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=wait2_16::type_id::create("s0");
   
     s0.start(env1.inp_agt.seqr);
  phase.drop_objection(this);
@@ -622,7 +667,26 @@ class test_wait_override extends alu_test;
  endtask 
 endclass
 
+class test_wait2_override extends alu_test;
+ `uvm_component_utils(test_wait2_override)
+  wait2_override s0;
+  
+  function new(string name="test_wait2_override",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
 
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=wait2_override::type_id::create("s0");
+  s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
 class test_wait_16_err extends alu_test;
  `uvm_component_utils(test_wait_16_err)
   wait_err s0;
@@ -638,6 +702,30 @@ class test_wait_16_err extends alu_test;
  task run_phase(uvm_phase phase);
  phase.raise_objection(this);
   s0=wait_err::type_id::create("s0");
+  
+    s0.start(env1.inp_agt.seqr);
+ phase.drop_objection(this);
+
+ endtask 
+endclass
+
+
+
+class test_wait2_16_err extends alu_test;
+ `uvm_component_utils(test_wait2_16_err)
+  wait2_err s0;
+  
+  function new(string name="test_wait2_16_err",uvm_component parent=null);
+	super.new(name,parent);
+ endfunction
+
+ function void build_phase(uvm_phase phase);
+	super.build_phase(phase);
+ endfunction
+
+ task run_phase(uvm_phase phase);
+ phase.raise_objection(this);
+  s0=wait2_err::type_id::create("s0");
   
     s0.start(env1.inp_agt.seqr);
  phase.drop_objection(this);
@@ -733,4 +821,191 @@ class test_wait_16_iv extends alu_test;
  phase.drop_objection(this);
 
  endtask 
+endclass
+
+
+
+
+
+class regression extends alu_test;
+  `uvm_component_utils(regression)
+
+  // Reset
+  reset               s_rst;
+
+  // Basic arithmetic / logical
+  ari                 s_ari;
+  log                 s_log;
+
+  // Add / Sub directed
+  seq3                s3;
+  seq4                s4;
+  seq5                s5;
+  seq6                s6;
+  seq7                s7;
+  seq8                s8;
+  seq9                s9;
+  seq10               s10;
+  seq11               s11;
+  seq12               s12;
+  seq14               s14;
+  seq16               s16;
+  seq18               s18;
+
+  // Multiply
+  ari9                s_mul_inc;
+  ari9_max            s_mul_inc_max;
+  ari10               s_mul_shl;
+  ari10_max           s_mul_shl_max;
+
+  // Input valid checks
+  seq13               s13;
+  seq15               s15;
+  seq17               s17;
+  seq19               s19;
+  seq_valid_inputs_m0 s_iv_m0;
+
+  // Compare / cmd invalid / iv0
+  compare_seq         s_cmp;
+  cmd_m1_iv           s_cmd_m1_iv;
+  cmd_m0_iv           s_cmd_m0_iv;
+  seq_iv_0            s_iv_00;
+
+  // Misc
+  seq_ce_zero         s_ce_zero;
+  rotate              s_rotate;
+
+  // Wait / mul-wait directed
+  wait_16             s_wait_16;
+  wait2_16            s_wait2_16;
+  wait_override       s_wait_ovr;
+  wait2_override      s_wait2_ovr;
+  wait_err            s_wait_err;
+  wait2_err           s_wait2_err;
+  wait_16_mul         s_wait_16_mul;
+  wait_16_mul_ov      s_wait_16_mul_ov;
+  wait_16_mul_err     s_wait_16_mul_err;
+  wait_16_iv_00       s_wait_16_iv;
+
+  function new(string name = "regression", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+
+    // ---- Reset (parallel apply_reset like test_rst) ----
+    s_rst = reset::type_id::create("s_rst");
+    fork
+      begin
+        s_rst.start(env1.inp_agt.seqr);
+      end
+      begin
+        #30;
+        env1.inp_agt.drv.apply_reset();
+      end
+    join
+
+    // ---- Basic arithmetic / logical ----
+    s_ari = ari::type_id::create("s_ari");
+    s_ari.start(env1.inp_agt.seqr);
+
+    s_log = log::type_id::create("s_log");
+    s_log.start(env1.inp_agt.seqr);
+
+    // ---- Add / Sub directed ----
+    s3 = seq3::type_id::create("s3");   s3.start(env1.inp_agt.seqr);
+    s4 = seq4::type_id::create("s4");   s4.start(env1.inp_agt.seqr);
+    s5 = seq5::type_id::create("s5");   s5.start(env1.inp_agt.seqr);
+    s6 = seq6::type_id::create("s6");   s6.start(env1.inp_agt.seqr);
+    s7 = seq7::type_id::create("s7");   s7.start(env1.inp_agt.seqr);
+    s8 = seq8::type_id::create("s8");   s8.start(env1.inp_agt.seqr);
+    s9 = seq9::type_id::create("s9");   s9.start(env1.inp_agt.seqr);
+    s10 = seq10::type_id::create("s10"); s10.start(env1.inp_agt.seqr);
+    s11 = seq11::type_id::create("s11"); s11.start(env1.inp_agt.seqr);
+    s12 = seq12::type_id::create("s12"); s12.start(env1.inp_agt.seqr);
+    s14 = seq14::type_id::create("s14"); s14.start(env1.inp_agt.seqr);
+    s16 = seq16::type_id::create("s16"); s16.start(env1.inp_agt.seqr);
+    s18 = seq18::type_id::create("s18"); s18.start(env1.inp_agt.seqr);
+
+    // ---- Multiply ----
+    s_mul_inc = ari9::type_id::create("s_mul_inc");
+    s_mul_inc.start(env1.inp_agt.seqr);
+
+    s_mul_inc_max = ari9_max::type_id::create("s_mul_inc_max");
+    s_mul_inc_max.start(env1.inp_agt.seqr);
+
+    s_mul_shl = ari10::type_id::create("s_mul_shl");
+    s_mul_shl.start(env1.inp_agt.seqr);
+
+    s_mul_shl_max = ari10_max::type_id::create("s_mul_shl_max");
+    s_mul_shl_max.start(env1.inp_agt.seqr);
+
+    // ---- Input valid checks ----
+    s13 = seq13::type_id::create("s13"); s13.start(env1.inp_agt.seqr);
+    s15 = seq15::type_id::create("s15"); s15.start(env1.inp_agt.seqr);
+    s17 = seq17::type_id::create("s17"); s17.start(env1.inp_agt.seqr);
+    s19 = seq19::type_id::create("s19"); s19.start(env1.inp_agt.seqr);
+
+    s_iv_m0 = seq_valid_inputs_m0::type_id::create("s_iv_m0");
+    s_iv_m0.start(env1.inp_agt.seqr);
+
+    // ---- Compare / cmd invalid / iv0 ----
+    s_cmp = compare_seq::type_id::create("s_cmp");
+    s_cmp.start(env1.inp_agt.seqr);
+
+    s_cmd_m1_iv = cmd_m1_iv::type_id::create("s_cmd_m1_iv");
+    s_cmd_m1_iv.start(env1.inp_agt.seqr);
+
+    s_cmd_m0_iv = cmd_m0_iv::type_id::create("s_cmd_m0_iv");
+    s_cmd_m0_iv.start(env1.inp_agt.seqr);
+
+    s_iv_00 = seq_iv_0::type_id::create("s_iv_00");
+    s_iv_00.start(env1.inp_agt.seqr);
+
+    // ---- Misc ----
+    s_ce_zero = seq_ce_zero::type_id::create("s_ce_zero");
+    s_ce_zero.start(env1.inp_agt.seqr);
+
+    s_rotate = rotate::type_id::create("s_rotate");
+    s_rotate.start(env1.inp_agt.seqr);
+
+    // ---- Wait / mul-wait directed ----
+    s_wait_16 = wait_16::type_id::create("s_wait_16");
+    s_wait_16.start(env1.inp_agt.seqr);
+
+    s_wait2_16 = wait2_16::type_id::create("s_wait2_16");
+    s_wait2_16.start(env1.inp_agt.seqr);
+
+    s_wait_ovr = wait_override::type_id::create("s_wait_ovr");
+    s_wait_ovr.start(env1.inp_agt.seqr);
+
+    s_wait2_ovr = wait2_override::type_id::create("s_wait2_ovr");
+    s_wait2_ovr.start(env1.inp_agt.seqr);
+
+    s_wait_err = wait_err::type_id::create("s_wait_err");
+    s_wait_err.start(env1.inp_agt.seqr);
+
+    s_wait2_err = wait2_err::type_id::create("s_wait2_err");
+    s_wait2_err.start(env1.inp_agt.seqr);
+
+    s_wait_16_mul = wait_16_mul::type_id::create("s_wait_16_mul");
+    s_wait_16_mul.start(env1.inp_agt.seqr);
+
+    s_wait_16_mul_ov = wait_16_mul_ov::type_id::create("s_wait_16_mul_ov");
+    s_wait_16_mul_ov.start(env1.inp_agt.seqr);
+
+    s_wait_16_mul_err = wait_16_mul_err::type_id::create("s_wait_16_mul_err");
+    s_wait_16_mul_err.start(env1.inp_agt.seqr);
+
+    s_wait_16_iv = wait_16_iv_00::type_id::create("s_wait_16_iv");
+    s_wait_16_iv.start(env1.inp_agt.seqr);
+
+    phase.drop_objection(this);
+  endtask
+
 endclass

@@ -7,14 +7,14 @@ module alu_assertion(
 
 property p1;
 @(posedge clk)disable iff(rst)
-(inp_valid == 2'b01)|-> (!(inp_valid inside {2'b10,2'b11}))[*16] ##1 err;
+(inp_valid == 2'b01)##1 (!(inp_valid inside {2'b10,2'b11}))[*16]|=> err;
 endproperty
 assert property(p1);
 
 
 property p2;
 @(posedge clk)disable iff(rst)
-(inp_valid == 2'b10)|-> (!(inp_valid inside {2'b01,2'b11}))[*16] ##1 err;
+(inp_valid == 2'b10)##1 (!(inp_valid inside {2'b01,2'b11}))[*16]|=> err;
 endproperty
-assert property(p1);
+assert property(p2);
 endmodule
