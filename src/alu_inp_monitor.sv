@@ -64,7 +64,6 @@ task collect_input_monitor();
 	     end
     inp_monitor_port.write(duv2mon);
 
-
 end
 endtask
  

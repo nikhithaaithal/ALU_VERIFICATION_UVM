@@ -50,7 +50,7 @@ else
  begin 
    repeat(1)@(viff.out_mon_cb);
   end
-@(viff.out_mon_cb);
+  @(viff.out_mon_cb);
   data_out.rst = viff.out_mon_cb.rst;
   data_out.res = viff.out_mon_cb.res;
   data_out.cout = viff.out_mon_cb.cout; 
@@ -68,7 +68,7 @@ else
   data_out.cin = viff.out_mon_cb.cin;
   out_monitor_port.write(data_out);
     
-end
+ end
 endtask
 
 

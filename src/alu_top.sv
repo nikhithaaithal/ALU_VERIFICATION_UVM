@@ -22,6 +22,7 @@ bind ALU_DESIGN alu_assertion alu (
     .err(ERR),
     .inp_valid(INP_VALID)
 );
+
 initial begin
 uvm_config_db#(virtual alu_if)::set(null,"uvm_test_top","alu_if",DUV_IF);
 $dumpfile("waves.vcd");

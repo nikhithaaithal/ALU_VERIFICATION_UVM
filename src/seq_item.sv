@@ -18,6 +18,7 @@ class trans extends uvm_sequence_item;
  constraint c5{ mode dist{1'b1:=10 ,1'b0:=10};}
  constraint c6{ if(mode) soft cmd inside {[0:10]};
                 else     soft cmd inside {[0:13]};}
+
 constraint c7 {inp_valid dist{2'b00:=5,2'b01:=5,2'b10:=5,2'b11:=100};}
  
 `uvm_object_utils_begin(trans)

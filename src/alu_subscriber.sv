@@ -44,7 +44,6 @@ class alu_subscriber extends uvm_subscriber #(trans);
 
   function void write(trans t);
      tr=t;
-    //`uvm_info("SUBSCRIBER", $sformatf("Received transaction:\n%s", tr.sprint()), UVM_HIGH)
      alu_cg.sample();
 endfunction
 endclass

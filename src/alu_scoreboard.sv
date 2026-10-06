@@ -316,6 +316,7 @@ virtual task ref_model(trans t);
  
                if(oprd2[4] | oprd2[5] | oprd2[6] | oprd2[7])
                  t.err=1'b1;
+
              end
  	    end
 	4'b1101:                       

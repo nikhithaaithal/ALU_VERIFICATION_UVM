@@ -58,7 +58,7 @@ endtask
              data2duv.opa, data2duv.opb, data2duv.ce, data2duv.mode, data2duv.cin,
              data2duv.inp_valid, data2duv.cmd, data2duv.res, data2duv.cout,
              data2duv.oflow, data2duv.g, data2duv.e, data2duv.l, data2duv.err),UVM_LOW)
-   repeat(2) @(viff.inp_drv_cb); 
+   repeat(1) @(viff.inp_drv_cb); 
    if(data2duv.mode &&(data2duv.cmd == 4'b1001 || data2duv.cmd == 4'b1010))begin repeat(1) @(viff.inp_drv_cb);end
  end
  endtask
